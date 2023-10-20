@@ -27,7 +27,9 @@ async function run() {
     await client.connect();
 
     const productCollection = client.db('brandShop').collection("allProduct");
+    const cartCollection = client.db('brandShop').collection('cartProduct')
 
+    // post product on database
     app.post('/products', async(req, res)=>{
       const newProduct = req.body;
       console.log(newProduct)
@@ -67,6 +69,20 @@ async function run() {
         }
       }
       const result = await productCollection.updateOne(filter, product, options)
+      res.send(result)
+    })
+
+    // post product on cart database
+    app.post('/cart', async(req, res)=>{
+      const newCart = req.body;
+      const result = await cartCollection.insertOne(newCart)
+      res.send(result)
+    })
+
+    // get cart data
+    app.get('/cart', async(req, res)=>{
+      const cursor = cartCollection.find()
+      const result = await cursor.toArray()
       res.send(result)
     })
     
