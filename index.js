@@ -32,7 +32,6 @@ async function run() {
     // post product on database
     app.post('/products', async(req, res)=>{
       const newProduct = req.body;
-      console.log(newProduct)
       const result = await productCollection.insertOne(newProduct)
       res.send(result)
     })
@@ -75,6 +74,7 @@ async function run() {
     // post product on cart database
     app.post('/cart', async(req, res)=>{
       const newCart = req.body;
+      delete newCart._id
       const result = await cartCollection.insertOne(newCart)
       res.send(result)
     })
@@ -89,7 +89,7 @@ async function run() {
     // delete  product
     app.delete('/cart/:id', async(req, res) => {
       const id = req.params.id;
-      const query = {_id: id}
+      const query = {_id: new ObjectId(id)}
       const result = await cartCollection.deleteOne(query)
       res.send(result)
     })
